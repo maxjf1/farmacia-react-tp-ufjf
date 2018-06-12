@@ -1,5 +1,8 @@
-.register-form {
+.container {
+    width: 100%;
     max-width: 780px;
     margin: 0 auto;
+}
+.register-form {
     padding: 10px;
 }

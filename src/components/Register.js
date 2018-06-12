@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Card, CardContent, CardActions, TextField, InputAdornment, Button } from "@material-ui/core"
 import { AccountCircle, Mail, Lock } from "@material-ui/icons"
@@ -7,8 +7,7 @@ import "./Register.css"
 
 //import firebaseApp from "./firebase.js"
 import { auth } from './firebase'
-
-
+import Header from "./Header"
 
 class Register extends Component {
     constructor(props) {
@@ -85,76 +84,78 @@ class Register extends Component {
         return (
             this.props.user ?
                 <Redirect to="/" /> :
-                <form className="register-form">
-                    <h1>Formulario de Cadastro</h1>
-                    <Card>
-                        <CardContent>
-                            <TextField
-                                label="Usuario"
-                                name="user"
-                                fullWidth
-                                margin="normal"
-                                error={this.state.validations.name ? true : false}
-                                helperText={this.state.validations.name}
-                                value={this.state.name}
-                                onChange={this.getFormHandler("name")}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <AccountCircle />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
+                <Fragment>
+                    <Header title="Cadastro" />
+                    <form className="container register-form">
+                        <Card>
+                            <CardContent>
+                                <TextField
+                                    label="Usuario"
+                                    name="user"
+                                    fullWidth
+                                    margin="normal"
+                                    error={this.state.validations.name ? true : false}
+                                    helperText={this.state.validations.name}
+                                    value={this.state.name}
+                                    onChange={this.getFormHandler("name")}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AccountCircle />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
 
-                            <TextField
-                                label="Email"
-                                name="email"
-                                type="email"
-                                fullWidth
-                                required
-                                margin="normal"
-                                error={this.state.validations.email ? true : false}
-                                helperText={this.state.validations.email}
-                                value={this.state.email}
-                                onChange={this.getFormHandler("email")}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Mail />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
+                                <TextField
+                                    label="Email"
+                                    name="email"
+                                    type="email"
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                    error={this.state.validations.email ? true : false}
+                                    helperText={this.state.validations.email}
+                                    value={this.state.email}
+                                    onChange={this.getFormHandler("email")}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Mail />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
 
-                            <TextField
-                                label="Senha"
-                                name="password"
-                                type="password"
-                                fullWidth
-                                margin="normal"
-                                error={this.state.validations.pass ? true : false}
-                                helperText={this.state.validations.pass}
-                                value={this.state.pass}
-                                onChange={this.getFormHandler("pass")}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Lock />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
+                                <TextField
+                                    label="Senha"
+                                    name="password"
+                                    type="password"
+                                    fullWidth
+                                    margin="normal"
+                                    error={this.state.validations.pass ? true : false}
+                                    helperText={this.state.validations.pass}
+                                    value={this.state.pass}
+                                    onChange={this.getFormHandler("pass")}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Lock />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
 
 
-                        </CardContent>
-                        <CardActions>
-                            <Button onClick={this.submitForm} type="submit" color="primary" variant="raised" fullWidth>Registrar</Button>
-                            <Button component={Link} to="/login" color="secondary" variant="raised" fullWidth>Logar</Button>
+                            </CardContent>
+                            <CardActions>
+                                <Button onClick={this.submitForm} type="submit" color="primary" variant="raised" fullWidth>Registrar</Button>
+                                <Button component={Link} to="/login" fullWidth>Logar</Button>
 
-                        </CardActions>
-                    </Card>
-                </form>
+                            </CardActions>
+                        </Card>
+                    </form>
+                </Fragment>
         );
     }
 }

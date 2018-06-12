@@ -6,6 +6,7 @@ import { Mail, Lock } from "@material-ui/icons"
 
 import { auth } from './firebase';
 import errorMessages from "../firebase/errorMessages"
+import Header from "./Header"
 
 class Login extends Component {
 
@@ -50,8 +51,8 @@ class Login extends Component {
             this.props.user ?
                 <Redirect to="/" /> :
                 <div>
-                    <form className="register-form" onSubmit={this.submitForm}>
-                        <h1>Login</h1>
+                    <Header title="Login" />
+                    <form className="container register-form" onSubmit={this.submitForm}>
                         <Card>
                             <CardContent>
                                 <TextField
@@ -98,7 +99,7 @@ class Login extends Component {
                             </CardContent>
                             <CardActions>
                                 <Button disabled={this.state.submiting} onClick={this.submitForm} type="submit" color="primary" variant="raised" fullWidth>Login</Button>
-                                <Button disabled={this.state.submiting} component={Link} to="/register" color="secondary" variant="raised" fullWidth>Registrar</Button>
+                                <Button disabled={this.state.submiting} component={Link} to="/register" fullWidth>Registrar</Button>
                             </CardActions>
 
                         </Card>
