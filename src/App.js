@@ -8,6 +8,7 @@ import { BrowserRouter, Switch, Route, Link } from "react-router-dom"
 import Register from "./components/Register"
 import Home from "./components/Home"
 import Login from "./components/Login"
+import ListaMedicamentos from "./components/ListaMedicamentos"
 
 import Auth from "./firebase/Auth"
 
@@ -42,6 +43,7 @@ class App extends Component {
                         <Route path="/" exact render={() => <Home user={this.state.user} onLogout={() => this.auth.logout()} />} />
                         <Route path="/register" render={() => <Register auth={this.auth} user={this.state.user} />} />
                         <Route path="/login" render={() => <Login auth={this.auth} user={this.state.user} />} />
+                        <Route path="/meds" render={() => <ListaMedicamentos auth={this.auth} user={this.state.user} />} />
 
 
                     </Switch>
