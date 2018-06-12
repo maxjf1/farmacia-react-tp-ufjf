@@ -17,7 +17,7 @@ class Home extends Component {
         return (
             <div>
                 <h2> Bem vindo, {this.props.user.email}! </h2>
-                
+                <button><Link to='/meds'>Medicamentos</Link></button>
                 {this.props.onLogout && <button onClick={this.props.onLogout}>Logout</button>}
 
             </div>

@@ -11,6 +11,7 @@ import Login from "./components/Login"
 import ListaMedicamentos from "./components/ListaMedicamentos"
 
 import Auth from "./firebase/Auth"
+import realtimeDB from './firebase/db';
 
 const temaPadrao = createMuiTheme({
     palette: {
@@ -23,14 +24,16 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.auth = new Auth();
+        //this.db = new realtimeDB();
         this.state = {
             user: this.auth.currentUser
         }
+        this.auth.auth.onAuthStateChanged(user => this.setState({ user: user }))
     }
 
 
     componentDidMount() {
-        this.auth.auth.onAuthStateChanged(user => this.setState({ user: user }))
+        
     }
 
     render() {
@@ -43,7 +46,7 @@ class App extends Component {
                         <Route path="/" exact render={() => <Home user={this.state.user} onLogout={() => this.auth.logout()} />} />
                         <Route path="/register" render={() => <Register auth={this.auth} user={this.state.user} />} />
                         <Route path="/login" render={() => <Login auth={this.auth} user={this.state.user} />} />
-                        <Route path="/meds" render={() => <ListaMedicamentos auth={this.auth} user={this.state.user} />} />
+                        <Route path="/meds" render={() => <ListaMedicamentos auth={this.auth}  user={this.state.user} />} />
 
 
                     </Switch>

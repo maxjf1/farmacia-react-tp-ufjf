@@ -65,7 +65,7 @@ class Login extends Component {
     render() {
         return (
             this.props.user ?
-                <Redirect to="/" /> :
+                <Redirect to="/"/> :
                 <div>
                     <form className="register-form">
                         <h1>Login</h1>

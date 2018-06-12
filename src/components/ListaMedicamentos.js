@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom'
 import { Card, CardContent, CardActions, TextField, InputAdornment, Button } from "@material-ui/core"
 
-import withUser from "../firebase/withUser"
+import withUser from "../firebase/withUser";
 import Medicamento from '../classes/medicamento';
+import realtimeDB from '../firebase/db';
 
 const base = [
     new Medicamento('a', 2),
@@ -14,11 +15,27 @@ class ListaMedicamentos extends Component {
 
     constructor(props) {
         super(props);
+        this.db = new realtimeDB();
+        this.dbref = this.db.db;
+
         this.state = {
+            user: this.props.user,
             meds: base,
             nome: "",
             qtd: 0
         }
+        // precisa formatar os dados q vem do db
+        /*
+        this.dbref.ref('meds').once('value').then(
+            data => {
+                // data.val() extrai os dados do snapshot
+                this.setState({
+                    meds: data.val()
+                });
+                //console.log(data.val());
+            }
+        );  
+        */
     }
 
     submitForm = (event) => {
@@ -103,4 +120,4 @@ class ListaMedicamentos extends Component {
     }
 }
 
-export default ListaMedicamentos;
+export default withUser(ListaMedicamentos);
