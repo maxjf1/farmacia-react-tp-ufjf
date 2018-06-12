@@ -5,6 +5,7 @@ import { Card, CardContent, CardActions, TextField, InputAdornment, Button } fro
 import { Mail, Lock } from "@material-ui/icons"
 
 import { auth } from './firebase';
+import errorMessages from "../firebase/errorMessages"
 
 class Login extends Component {
 
@@ -14,7 +15,7 @@ class Login extends Component {
             email: "",
             pass: "",
             error: false,
-            validations: {}
+            submiting: false,
         }
     }
 
@@ -29,33 +30,15 @@ class Login extends Component {
         });
     }
 
-    validateEmail(field) {
-        if (!field)
-            return "O email e invalido."
-    }
-
-    validatePassword(pass) {
-        if (pass.length < 6)
-            return "A senha tem que ser maior do que 6 caracteres."
-    }
-
     submitForm = (event) => {
         event.preventDefault();
         const { email, pass } = this.state;
-        const emailValidation = this.validateEmail(email);
-        const passValidation = this.validatePassword(pass);
-        if (emailValidation || passValidation)
-            return this.setState({
-                error: true, validations: {
-                    email: emailValidation, pass: passValidation
-                }
-            })
-        else {
-            return this.props.auth
-                .login(email, pass)
-                .then(status => console.log(status))
-                .catch(err => console.log(err))
-        }
+        this.setState({ submiting: true, error: false })
+        return this.props.auth
+            .login(email, pass)
+            .then(status => console.log(status) || this.setState({ submiting: false }))
+            .catch(err => console.error(err) || this.setState({ submiting: false, error: err.code }))
+
     }
 
     getFormHandler(field) {
@@ -67,11 +50,10 @@ class Login extends Component {
             this.props.user ?
                 <Redirect to="/" /> :
                 <div>
-                    <form className="register-form">
+                    <form className="register-form" onSubmit={this.submitForm}>
                         <h1>Login</h1>
                         <Card>
                             <CardContent>
-
                                 <TextField
                                     label="Email"
                                     name="email"
@@ -79,8 +61,8 @@ class Login extends Component {
                                     fullWidth
                                     required
                                     margin="normal"
-                                    error={this.state.validations.email ? true : false}
-                                    helperText={this.state.validations.email}
+                                    error={this.state.error === "auth/invalid-email" || this.state.error === "auth/user-not-found"}
+                                    helperText={this.state.error === "email" && "Email não cadastrado ou inválido."}
                                     value={this.state.email}
                                     onChange={this.getFormHandler("email")}
                                     InputProps={{
@@ -99,8 +81,8 @@ class Login extends Component {
                                     fullWidth
                                     required
                                     margin="normal"
-                                    error={this.state.validations.pass ? true : false}
-                                    helperText={this.state.validations.pass}
+                                    error={this.state.error === "auth/wrong-password"}
+                                    helperText={this.state.error === "email" && "Email não cadastrado ou inválido."}
                                     value={this.state.pass}
                                     onChange={this.getFormHandler("pass")}
                                     InputProps={{
@@ -111,12 +93,12 @@ class Login extends Component {
                                         ),
                                     }}
                                 />
-
-
+                                {this.state.submiting && <h2>Aguarde...</h2>}
+                                {this.state.error && <h2>{errorMessages[this.state.error] || errorMessages.default}</h2>}
                             </CardContent>
                             <CardActions>
-                                <Button onClick={this.submitForm} type="submit" color="primary" variant="raised" fullWidth>Login</Button>
-                                <Button component={Link} to="/register" color="secondary" variant="raised" fullWidth>Registrar</Button>
+                                <Button disabled={this.state.submiting} onClick={this.submitForm} type="submit" color="primary" variant="raised" fullWidth>Login</Button>
+                                <Button disabled={this.state.submiting} component={Link} to="/register" color="secondary" variant="raised" fullWidth>Registrar</Button>
                             </CardActions>
 
                         </Card>

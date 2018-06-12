@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import 'typeface-roboto'
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core"
-import red from '@material-ui/core/colors/red';
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom"
+import { indigo, blueGrey } from '@material-ui/core/colors';
+import { BrowserRouter, Switch, Route } from "react-router-dom"
 
 //import firebaseApp from './components/firebase';
 import Register from "./components/Register"
@@ -13,7 +13,8 @@ import Auth from "./firebase/Auth"
 
 const temaPadrao = createMuiTheme({
     palette: {
-        primary: red,
+        primary: indigo,
+        secondary: blueGrey
     },
 });
 
