@@ -1,7 +1,7 @@
 
 class Medicamento {
-    constructor(nome, qtd) {
-        this.id = -1;
+    constructor(id, nome, qtd) {
+        this.id = id;
         this.nome = nome;
         this.qtd = qtd;
     }

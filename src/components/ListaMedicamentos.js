@@ -7,8 +7,8 @@ import Medicamento from '../classes/medicamento';
 import realtimeDB from '../firebase/db';
 
 const base = [
-    new Medicamento('a', 2),
-    new Medicamento('b', 5)
+    new Medicamento(-1, 'a', 2),
+    new Medicamento(-1, 'b', 5)
 ]
 
 class ListaMedicamentos extends Component {
@@ -24,45 +24,65 @@ class ListaMedicamentos extends Component {
             nome: "",
             qtd: 0
         }
-        // precisa formatar os dados q vem do db
-        /*
+        
         this.dbref.ref('meds').once('value').then(
             data => {
-                // data.val() extrai os dados do snapshot
-                this.setState({
-                    meds: data.val()
+                var med = [];
+                data.forEach(child => {
+                    const {id,nome,qtd} = child.val();
+                    var m = new Medicamento(id,nome,qtd);
+                    med.push(m);
                 });
-                //console.log(data.val());
+                this.setState({
+                    meds: med
+                });
+                this.registrarDBListener();
             }
         );  
-        */
+    }
+
+
+    // coloquei pra recarregar a lista toda qnd alterar algo
+    registrarDBListener() {
+        this.dbref.ref('meds').on('value', data => {
+            var med = [];
+            data.forEach(child => {
+                const {id,nome,qtd} = child.val();
+                var m = new Medicamento(id,nome,qtd);
+                med.push(m);
+            });
+            this.setState({
+                meds: med
+            });
+        });
     }
 
     submitForm = (event) => {
         event.preventDefault();
         const {nome, qtd} = this.state
         if(nome.length > 0 && qtd > 0) {
-            return this.setState(old => ({
-                meds: [...old.meds, new Medicamento(nome, qtd)]
-            })
-        );
+            const med = new Medicamento(-1,nome, qtd);
+            var v = this.dbref.ref('meds').push(med);
+            this.dbref.ref('meds').child(v.key).update({id:v.key}, data => {
+                console.log('Sucesso add');
+            });
         }
         return;
     }
 
 
-    // splice retorna o elemento removido, entao n da pra fazer dentro do setstate(eu acho)
-    removerMed(index) {
-        console.log(index);
-        this.state.meds.splice(index,1)
-        return this.setState(old => ({
-            meds: old.meds
-        }))
+    removerMed(key) {
+        this.dbref.ref('meds').child(key).remove();
     }
 
 
     getFormHandler(field) {
         return event => this.setState({ [field]: event.target.value })
+    }
+
+    // remover o listener
+    componentWillUnmount() {
+        this.dbref.ref('meds').off();
     }
 
     render() {
@@ -73,11 +93,10 @@ class ListaMedicamentos extends Component {
                 <ul>
                     {
                         this.state.meds.map((obj, index) => {
-                            return (<li key={index}>{obj.nome} : {obj.qtd}
+                            return (<li key={index}> {obj.nome} : {obj.qtd}
                             <Button onClick={
                                 () => {
-                                console.log("Elemento clicado: " + obj.nome);
-                                this.removerMed(index)
+                                this.removerMed(obj.id);
                                 }
                             }>Remover</Button>
                             </li>)
